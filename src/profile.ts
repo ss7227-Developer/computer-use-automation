@@ -6,7 +6,7 @@ export const heading = (name: string): Checkpoint => ({ target: target(name, 'he
 export const inputTarget: Target = { frame: 'workspace', by: 'label', name: 'Member ID' };
 export const publicHeadings = ['Member search', 'Search results', 'Member overview', 'Savings review', 'Member not found', 'Invalid member ID', 'Permission denied', 'Temporarily unavailable', 'Session expired', 'Loading member', 'Application unavailable'];
 export function demoPolicy(origin: string): Policy {
-  return new Policy({ origin, routes: ['/', '/workspace'], publicTexts: [...publicHeadings, 'Member ID', 'Search', 'Open member', 'Review savings', 'Savings balance', 'Retry lookup', 'Restore training session', 'Close account'], rules: [
+  return new Policy({ origin, routes: ['/', '/workspace', '/favicon.ico'], publicTexts: [...publicHeadings, 'Member ID', 'Search', 'Open member', 'Review savings', 'Savings balance', 'Retry lookup', 'Restore training session', 'Close account'], rules: [
     { target: inputTarget, kinds: ['fill'], risk: 'safe' },
     ...['Search', 'Open member', 'Review savings', 'Retry lookup'].map(name => ({ target: target(name), kinds: ['click' as const], risk: 'safe' as const })),
     ...['Close account', 'Restore training session'].map(name => ({ target: target(name), kinds: ['click' as const], risk: 'risky' as const })),

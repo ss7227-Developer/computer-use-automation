@@ -1,0 +1,28 @@
+name: Verify computer-use capability
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TEST_EVIDENCE_ROOT: work/ci-evidence/tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check
+      - run: npm run demo -- --evidence work/ci-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: offline-browser-evidence
+          path: work/ci-evidence

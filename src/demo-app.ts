@@ -9,6 +9,7 @@ export async function startDemo(scenario: Scenario = 'normal', port = 0): Promis
   const server = createServer((req, res) => {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'no-store');
+    if (req.url === '/favicon.ico') { res.statusCode = 204; return res.end(); }
     if (req.url === '/') return res.end(page('<header><small>NORTHSTAR / TRAINING ENVIRONMENT / v1</small><h1>Member servicing</h1></header><iframe name="workspace" title="Servicing workspace" src="/workspace"></iframe>'));
     if (req.url !== '/workspace') { res.statusCode = 404; return res.end('Not found'); }
     res.end(page(`<main><aside>Synthetic records only. No real accounts or transactions.</aside><div id="screen"></div></main><script>
