@@ -8,6 +8,7 @@
     "build": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "check": "npm run build && npm test",
+    "evidence": "node --import tsx src/evidence-run.ts",
     "demo": "tsx src/cli.ts demo",
     "discover": "tsx src/cli.ts discover",
     "replay": "tsx src/cli.ts replay",

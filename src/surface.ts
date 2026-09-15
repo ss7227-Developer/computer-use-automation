@@ -116,8 +116,17 @@ export class BrowserSurface implements Surface {
       try {
         this.policy.url(frame.url());
         const structure = await frame.locator('body').evaluate(el => {
-          const visit = (node: Element, depth: number): unknown => ({ tag: node.tagName.toLowerCase(), children: depth < 6 ? Array.from(node.children).filter(e => !['SCRIPT', 'STYLE'].includes(e.tagName)).slice(0,80).map(e => visit(e,depth+1)) : [] });
-          return visit(el, 0);
+          const nodes: { tag:string; parent:number|null; depth:number }[] = [];
+          const pending: { node:Element; parent:number|null; depth:number }[] = [{ node:el,parent:null,depth:0 }];
+          while (pending.length && nodes.length < 500) {
+            const current = pending.shift()!;
+            const tag = current.node.tagName.toLowerCase();
+            if (['script','style'].includes(tag)) continue;
+            const index = nodes.length;
+            nodes.push({ tag: ['body','main','div','span','p','table','tbody','tr','td','th','h1','h2','header','aside','iframe','button','input','label','small'].includes(tag) ? tag : 'element',parent:current.parent,depth:current.depth });
+            if (current.depth < 6) for (const child of Array.from(current.node.children).slice(0,80)) pending.push({ node:child,parent:index,depth:current.depth+1 });
+          }
+          return { nodes };
         });
         frames.push({ frame: frame === this.page.mainFrame() ? 'main' : 'child', structure });
       } catch { frames.push({ frame: 'unavailable' }); }

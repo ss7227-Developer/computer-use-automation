@@ -45,6 +45,8 @@ for (const [scenario, status, code] of [
     if (result.status === 'failure') {
       const snapshot = await readFile(join(f.evidence.directory,'failure-state.json'),'utf8');
       assert.match(snapshot,/redacted_dom_structure/);
+      assert.match(snapshot,/"tag": "body"/);
+      assert.match(snapshot,/"tag": "h2"/);
       assert(!snapshot.includes('M001'));
     }
   } finally { await f.close(); }
